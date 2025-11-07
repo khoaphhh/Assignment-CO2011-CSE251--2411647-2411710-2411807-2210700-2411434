@@ -10,3 +10,4 @@
 
 # Test Task 1
     python main.py --task parse --input examples/simple_net.pnml
+    python main.py --task parse --input examples/deadlock_example.pnml

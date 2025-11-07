@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+  <net id="deadlock_net" type="http://www.pnml.org/version-2009/grammar/ptnet">
+    <name>
+      <text>Simple Deadlock Example</text>
+    </name>
+    <page id="page1">
+      <place id="p1_think">
+        <name><text>P1 Thinking</text></name>
+        <initialMarking><text>1</text></initialMarking>
+      </place>
+      <place id="p2_think">
+        <name><text>P2 Thinking</text></name>
+        <initialMarking><text>1</text></initialMarking>
+      </place>
+      <place id="fork1">
+        <name><text>Fork 1</text></name>
+        <initialMarking><text>1</text></initialMarking>
+      </place>
+      <place id="fork2">
+        <name><text>Fork 2</text></name>
+        <initialMarking><text>1</text></initialMarking>
+      </place>
+      <place id="p1_has_f1">
+        <name><text>P1 has Fork 1</text></name>
+        <initialMarking><text>0</text></initialMarking>
+      </place>
+      <place id="p2_has_f2">
+        <name><text>P2 has Fork 2</text></name>
+        <initialMarking><text>0</text></initialMarking>
+      </place>
+
+      <transition id="t1_p1_gets_f1">
+        <name><text>P1 gets Fork 1</text></name>
+      </transition>
+      <transition id="t2_p2_gets_f2">
+        <name><text>P2 gets Fork 2</text></name>
+      </transition>
+      <transition id="t3_p1_gets_f2">
+        <name><text>P1 gets Fork 2 (Eats)</text></name>
+      </transition>
+      <transition id="t4_p2_gets_f1">
+        <name><text>P2 gets Fork 1 (Eats)</text></name>
+      </transition>
+
+      <arc id="a1" source="p1_think" target="t1_p1_gets_f1"></arc>
+      <arc id="a2" source="fork1" target="t1_p1_gets_f1"></arc>
+      <arc id="a3" source="t1_p1_gets_f1" target="p1_has_f1"></arc>
+      
+      <arc id="a4" source="p2_think" target="t2_p2_gets_f2"></arc>
+      <arc id="a5" source="fork2" target="t2_p2_gets_f2"></arc>
+      <arc id="a6" source="t2_p2_gets_f2" target="p2_has_f2"></arc>
+
+      <arc id="a7" source="p1_has_f1" target="t3_p1_gets_f2"></arc>
+      <arc id="a8" source="fork2" target="t3_p1_gets_f2"></arc>
+      <arc id="a9" source="t3_p1_gets_f2" target="p1_think"></arc>
+      <arc id="a10" source="t3_p1_gets_f2" target="fork1"></arc>
+      <arc id="a11" source="t3_p1_gets_f2" target="fork2"></arc>
+
+      <arc id="a12" source="p2_has_f2" target="t4_p2_gets_f1"></arc>
+      <arc id="a13" source="fork1" target="t4_p2_gets_f1"></arc>
+      <arc id="a14" source="t4_p2_gets_f1" target="p2_think"></arc>
+      <arc id="a15" source="t4_p2_gets_f1" target="fork1"></arc>
+      <arc id="a16" source="t4_p2_gets_f1" target="fork2"></arc>
+      
+    </page>
+  </net>
+</pnml>
