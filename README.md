@@ -9,5 +9,5 @@
     pip install -r requirements.txt
 
 # Test Task 1
-    python main.py --task parse --input examples/simple_net.pnml
-    python main.py --task parse --input examples/deadlock_example.pnml
+    python -m src.main --task parse --input examples/simple_net.pnml
+    python -m src.main --task parse --input examples/deadlock_example.pnml

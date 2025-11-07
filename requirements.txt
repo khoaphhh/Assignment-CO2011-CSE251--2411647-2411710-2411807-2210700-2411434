@@ -1,5 +1,5 @@
 # PNML parsing
-xmltodict
+pm4py
 
 # Graph modeling
 networkx
