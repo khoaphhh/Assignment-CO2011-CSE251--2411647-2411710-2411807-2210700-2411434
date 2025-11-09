@@ -1,13 +1,7 @@
-# PNML parsing
-pm4py
-
-# Graph modeling
-networkx
-
-# Symbolic reasoning (BDD)
+# Task 3: Symbolic reasoning (BDD)
 pyeda
 
-# Optimization (ILP)
+# Task 4: Optimization (ILP)
 pulp
 
 # Data analysis & visualization
