@@ -2,7 +2,7 @@ import os
 import sys
 
 from reachability_explicit import ReachabilityNet
-
+from reachability_bdd import SymbolicReachabilityPyEDA
 
 def test_file(file_path):
     filename = os.path.basename(file_path)
@@ -33,6 +33,7 @@ def test_file(file_path):
 
         # Bước 2: Chạy BFS
         reachable_markings = net.bfs()
+        explicit_count = len(reachable_markings)
 
         # Bước 3: Báo cáo kết quả
         count = len(reachable_markings)
@@ -52,6 +53,35 @@ def test_file(file_path):
     except Exception as e:
         print(f"❌ Lỗi khi chạy Task 2: {e}")
 
+    print(f"\n[Task 3] Symbolic Reachability (BDD)...")
+    try:
+        # Khởi tạo đối tượng BDD
+        sym_net = SymbolicReachabilityPyEDA()
+        
+        # --- QUAN TRỌNG: COPY DỮ LIỆU ---
+        # Chuyển dữ liệu từ net (Task 1) sang sym_net để không phải parse lại
+        sym_net.places = net.places
+        sym_net.transitions = net.transitions
+        sym_net.arcs = net.arcs
+        
+        # Chạy tính toán BDD
+        bdd_count, bdd_time = sym_net.compute_reachable()
+        
+        print(f"✅ Hoàn thành.")
+        print(f"   👉 Tổng số trạng thái (Symbolic): {bdd_count}")
+        print(f"   ⏱️ Thời gian tính toán: {bdd_time:.4f} giây")
+        
+        # --- SO SÁNH KẾT QUẢ ---
+        print(f"\n[Validation]")
+        if explicit_count == bdd_count:
+            print(f"   ✅ KẾT QUẢ KHỚP NHAU! ({explicit_count})")
+        else:
+            print(f"   ⚠️ CẢNH BÁO: LỆCH KẾT QUẢ!")
+            print(f"      Explicit: {explicit_count}")
+            print(f"      Symbolic: {bdd_count}")
+            
+    except Exception as e:
+        print(f"❌ Lỗi Task 3: {e}")
 
 def main():
 
