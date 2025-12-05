@@ -2,9 +2,9 @@ from reachability_explicit import ReachabilityNet
 
 class OptimizationReachability(ReachabilityNet):
     def optimize_marking(self, objective_weights):
-        reachable_markings = self.bfs()
+        reachable_markings, exec_time, mem_used = self.bfs()
         if not reachable_markings:
-            return None, 0, 0
+            return None, 0, 0, exec_time, mem_used
         best_value = -float('inf')
         best_marking = None
         for marking in reachable_markings:
@@ -17,14 +17,13 @@ class OptimizationReachability(ReachabilityNet):
                 best_value = curr
                 best_marking = marking
 
-        return best_marking, best_value, len(reachable_markings)
+        return best_marking, best_value, len(reachable_markings), exec_time, mem_used
 
     def print_result(self, objective_weights):
-        import time
-        start = time.time()
+        
 
-        marking, value, count = self.optimize_marking(objective_weights)
-        duration = time.time() - start
+        marking, value, count, time_used, mem_used = self.optimize_marking(objective_weights)
+        
         
         print("\n" + "="*50)
         print("KẾT QUẢ TỐI ƯU HÓA")
@@ -33,7 +32,8 @@ class OptimizationReachability(ReachabilityNet):
         print(f"Hàm mục tiêu: {objective_weights}")
         print(f"Chế độ: Maximize")
         print(f"Số đánh dấu đạt được: {count}")
-        print(f"Thời gian tính toán: {duration:.4f} giây")
+        print(f"Thời gian tính toán: {time_used:.4f} giây")
+        print(f"Bộ nhớ: {mem_used:.4f} MB")
         print("-"*50)
         
         if marking is None:

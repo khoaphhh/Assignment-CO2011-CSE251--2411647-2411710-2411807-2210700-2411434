@@ -65,10 +65,12 @@ def test_file(file_path):
         print(f"\n[Task 2] Computing Reachability Graph (BFS)")
         try:
             net.build_pre_post()
-            reachable_markings = net.bfs()
+            reachable_markings, exec_time, mem_used = net.bfs() 
             explicit_count = len(reachable_markings)
 
             print(f"   Total reachable states: {explicit_count}")
+            print(f"   Time: {exec_time:.10f}s")
+            print(f"   Memory used: {mem_used:.10f} MB")
 
             if explicit_count <= 20:
                 print("   Marking list:")
@@ -90,10 +92,12 @@ def test_file(file_path):
         sym_net.transitions = net.transitions
         sym_net.arcs = net.arcs
 
-        bdd_count, bdd_time, formulas = sym_net.compute_reachable(return_formula=True)
+        bdd_count, bdd_time, bdd_mem, formulas = sym_net.compute_reachable(return_formula=True)
 
         print(f"   Total states (Symbolic): {bdd_count}")
-        print(f"   Computation time: {bdd_time:.4f}s")
+        print(f"   Time: {bdd_time:.10f}s")
+        print(f"   Memory used: {bdd_mem:.10f} MB")
+        
         print(f"   Symbolic formula:")
         print(f"      - Initial: {formulas['initial']}")
         print(f"      - Final: {formulas['final']}")
@@ -162,16 +166,15 @@ def test_file(file_path):
 
             print(f"➡️  Objective function: maximize {weights}")
 
-            start_time = time.time()
-            optimal_marking, optimal_value, total_markings = opt_net.optimize_marking(weights)
-            runtime = time.time() - start_time
+            optimal_marking, optimal_value, total_markings, exec_time_opt, mem_used_opt = opt_net.optimize_marking(weights)
 
             if optimal_marking is None:
                 print("❌ Không tìm được marking tối ưu.")
             else:
                 print(f"- Optimal value: {optimal_value}")
                 print(f"- Optimal marking: {optimal_marking}")
-                print(f"- Running time: {runtime:.6f}s")
+                print(f"- Running time: {exec_time_opt:.10f}s")
+                print(f"- Memory used: {mem_used_opt:.10f} MB")
 
         except Exception as e:
             print(f"❌ Lỗi Task 5: {e}")

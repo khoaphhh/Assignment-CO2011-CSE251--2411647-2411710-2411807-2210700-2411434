@@ -1,1 +1,4 @@
-thêm thời gian chạy với memory cho task 2
+task 2 thiếu time và memory, task 3 thiếu memory, so sánh performance của 2,3
+thêm ví dụ deadlock cho task 4
+thêm ví dụ cho task 5
+khó khăn của task 5: file pnml chỉ biết được petrinet chứ không biết được hàm mục tiêu. mình phải nhập từ bàn phím

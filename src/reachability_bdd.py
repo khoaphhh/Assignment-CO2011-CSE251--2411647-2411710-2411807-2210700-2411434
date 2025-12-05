@@ -1,5 +1,7 @@
 import time
 import sys
+import psutil
+import os
 from pyeda.inter import bddvar, expr2bdd
 from pyeda.boolalg.expr import expr
 from pnml_parser import PetriNet
@@ -240,6 +242,9 @@ class SymbolicReachabilityPyEDA(PetriNet):
         
         # Symbolic BFS
         start_time = time.time()
+        process = psutil.Process(os.getpid())
+        start_mem = process.memory_info().rss
+        
         current_vars = list(self.place_to_curr_var.values())
         iteration = 0
         max_iterations = 20
@@ -291,13 +296,16 @@ class SymbolicReachabilityPyEDA(PetriNet):
             current_set = new_set
         
         end_time = time.time()
+        end_mem = process.memory_info().rss
+
         duration = end_time - start_time
+        memory_used = (end_mem - start_mem) / 1024 / 1024
         
         final_count = int(current_set.satisfy_count())
         final_formula = self.bdd_to_readable_formula(current_set)
         
         if return_formula:
-            return final_count, duration, {
+            return final_count, duration, memory_used, {
                 'initial': initial_formula,
                 'transition': f"R(x,x')",
                 'final': final_formula,
@@ -305,7 +313,7 @@ class SymbolicReachabilityPyEDA(PetriNet):
                 'valid': True
             }
         else:
-            return final_count, duration
+            return final_count, duration, memory_used
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -316,12 +324,13 @@ if __name__ == "__main__":
     net = SymbolicReachabilityPyEDA()
     
     if net.parse_pnml(file_path):
-        count, duration, formulas = net.compute_reachable(return_formula=True)
+        count, duration, memory, formulas = net.compute_reachable(return_formula=True)
         
         if formulas.get('valid', True):
             print(f"✅ Task 3 (PyEDA) Hoàn thành.")
             print(f"   Tổng số trạng thái: {count}")
             print(f"   Thời gian: {duration:.4f}s")
+            print(f"   Bộ nhớ sử dụng: {memory:.4f} MB")
             print(f"   Công thức symbolic:")
             print(f"      - Initial: M₀(x) = {formulas['initial']}")
             print(f"      - Final Reachable: F(x) = {formulas['final']}")

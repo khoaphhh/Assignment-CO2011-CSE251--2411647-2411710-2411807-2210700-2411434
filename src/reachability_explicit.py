@@ -1,3 +1,6 @@
+import time
+import psutil
+import os
 from pnml_parser import PetriNet
 
 class ReachabilityNet(PetriNet):
@@ -36,6 +39,10 @@ class ReachabilityNet(PetriNet):
 
     def bfs(self):
         from collections import deque
+        
+        process = psutil.Process(os.getpid())
+        start_mem = process.memory_info().rss
+        start_time = time.time()
 
         init = self.get_initial_marking()
         queue = deque([init])
@@ -57,8 +64,14 @@ class ReachabilityNet(PetriNet):
                         seen.add(sig)
                         reachable.append(new_m)
                         queue.append(new_m)
+                        
+        end_time = time.time()
+        end_mem = process.memory_info().rss
 
-        return reachable
+        exec_time = end_time - start_time
+        mem_used = (end_mem - start_mem) / 1024 / 1024
+
+        return reachable, exec_time, mem_used
 
 
 if __name__ == "__main__":
@@ -71,7 +84,10 @@ if __name__ == "__main__":
     net.parse_pnml(sys.argv[1])
     net.build_pre_post()
 
-    reachable = net.bfs()
+    reachable, exec_time, mem_used = net.bfs() 
     print(f"Reachable markings ({len(reachable)}):")
     for m in reachable:
         print(m)
+    
+    print(f"\nExecution time: {exec_time:.4f} seconds")
+    print(f"Memory used: {mem_used:.4f} MB")
