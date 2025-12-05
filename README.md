@@ -10,5 +10,5 @@
     cập nhật thư viện: pip install --upgrade -r requirements.txt
 
 
-# chạy chương trình
+# Chạy chương trình
     python src/main.py
