@@ -8,5 +8,6 @@ pyeda
 pulp
 
 # Additional libs
+psutil
 pytest
 matplotlib
